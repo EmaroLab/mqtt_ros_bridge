@@ -42,8 +42,8 @@ class bridge:
     def msg_process(self, msg):
         pass
 
-    def looping(self):
-        self.client.loop(.1)
+    def looping(self, loop_timeout = .1):
+        self.client.loop(loop_timeout)
 
     def on_connect(self, client, userdata, flags, rc):
         print("Connected with result code "+str(rc))
