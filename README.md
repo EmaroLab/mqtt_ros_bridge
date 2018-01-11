@@ -12,7 +12,7 @@ git clone https://github.com/EmaroLab/mqtt_ros_bridge.git
 
 ## Dependencies
 
-In order to succesfully run the code, install [paho-mqtt](https://pypi.python.org/pypi/paho-mqtt/1.1) and [ROS](http://wiki.ros.org/kinetic/Installation/Ubuntu).
+In order to succesfully run the code, you should have installed [paho-mqtt](https://pypi.python.org/pypi/paho-mqtt/1.1) and [ROS](http://wiki.ros.org/kinetic/Installation/Ubuntu).
 
 ## MQTT Broker
 
