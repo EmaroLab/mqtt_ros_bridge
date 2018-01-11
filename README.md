@@ -5,7 +5,7 @@ This Bridge allows to subscribe to MQTT topics and publish contents of MQTT mess
 ## Installation
 
 ```bash
-git clone https://github.com/ACarfi/mqtt_ros_bridge.git
+git clone https://github.com/EmaroLab/mqtt_ros_bridge.git
 ```
 
 ## Dependencies
