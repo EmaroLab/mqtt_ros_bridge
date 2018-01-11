@@ -4,6 +4,8 @@ This Bridge allows to subscribe to MQTT topics and publish contents of MQTT mess
 
 ## Installation
 
+Clone the repository in the source folder of your catkin workspace.
+
 ```bash
 git clone https://github.com/EmaroLab/mqtt_ros_bridge.git
 ```
