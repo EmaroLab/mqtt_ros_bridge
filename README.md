@@ -55,3 +55,7 @@ The _imu_brdige_ node is an example of how to use the bridge, summing up:
     ```
 1. Implement the _msg_process_ function to map MQTT message to ROS message.
 1. Initialize the bridge and call the _loop_ function in a ROS while loop.
+
+## Author
+
+[Alessandro Carfì](https://github.com/ACarfi) e-mail: alessandro.carfi@dibris.unige.it
