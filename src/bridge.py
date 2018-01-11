@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import paho.mqtt.client as mqtt
 import rospy
+import time
 
 class bridge:
 
@@ -13,6 +14,10 @@ class bridge:
         self.port = port
         self.keepalive = keepalive
 
+        self.disconnect_flag = False
+        self.rc = 1
+        self.timeout = 0;
+
         self.client = mqtt.Client(self.client_id, clean_session=True)
         self.client.username_pw_set(self.user_id, self.password)
 
@@ -22,8 +27,17 @@ class bridge:
         self.client.on_unsubscribe = self.on_unsubscribe
         self.client.on_subscribe = self.on_subscribe
 
-        self.client.connect(self.host, self.port, self.keepalive)
+        self.connect()
         self.publisher = publisher
+
+    def connect(self):
+        while self.rc != 0:
+            try:
+                self.rc = self.client.connect(self.host, self.port, self.keepalive)
+            except:
+                print "connection failed"
+            time.sleep(2)
+            self.timeout = self.timeout + 2
 
     def msg_process(self, msg):
         pass
@@ -34,10 +48,15 @@ class bridge:
     def on_connect(self, client, userdata, flags, rc):
         print("Connected with result code "+str(rc))
         self.client.subscribe(self.mqtt_topic)
+        self.timeout = 0
 
     def on_disconnect(self, client, userdata, rc):
         if rc != 0:
-            print "Unexpected disconnection."
+            if not self.disconnect_flag:
+                print "Unexpected disconnection."
+                print "Trying reconnection"
+                self.rc = rc
+                self.connect()
 
     def on_message(self, client, userdata, msg):
         self.publisher.publish(self.msg_process(msg.payload))
@@ -48,6 +67,7 @@ class bridge:
 
     def disconnect(self):
         print " disconnecting"
+        self.disconnect_flag = True
         self.client.disconnect()
 
     def on_unsubscribe(self, client, userdata, mid):
