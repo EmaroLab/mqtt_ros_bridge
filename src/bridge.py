@@ -80,3 +80,6 @@ class bridge:
         self.unsubscribe()
         self.disconnect()
         print " shutting down"
+
+    def get_timeout(self):
+        return self.timeout
