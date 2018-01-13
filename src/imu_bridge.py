@@ -34,9 +34,14 @@ class imu_bridge(bridge.bridge):
 
 def main():
     rospy.init_node('imu_bridge', anonymous=True)
+    device = rospy.get_param('imu_bridge/device_name','sensors')
+    mqtt_topic = device + '/imu'
     imu_publisher = rospy.Publisher('/imu_data', Imu, queue_size=1)
-    imu_sub = imu_bridge(imu_publisher, "sensors/imu")
+    imu_sub = imu_bridge(imu_publisher, mqtt_topic)
     rospy.on_shutdown(imu_sub.hook)
+
+    
+
 
     while not rospy.is_shutdown():
         imu_sub.looping()
