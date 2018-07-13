@@ -10,26 +10,49 @@ class imu_bridge(bridge.bridge):
 
     def msg_process(self, msg):
         msg_list = msg.split(";")
+        
+        pkgSizeAcc = int(msg_list[0])
+        moduleSizeAcc = 4*pkgSizeAcc+2
+        acc_msg = msg_list[2:moduleSizeAcc]
 
+        pkgSizeGyro = int(msg_list[moduleSizeAcc])
+        moduleSizeGyro = 4*pkgSizeGyro+2
+        gyro_msg = msg_list[moduleSizeAcc+2:moduleSizeAcc+moduleSizeGyro]
+
+        biggerpkg = max([pkgSizeAcc, pkgSizeGyro])
+
+        imu_list = []
         acceleration = Vector3()
-        acceleration.x = float(msg_list[1].replace(',','.'))
-        acceleration.y = float(msg_list[2].replace(',','.'))
-        acceleration.z = float(msg_list[3].replace(',','.'))
-
         velocity = Vector3()
-        velocity.x = float(msg_list[5].replace(',','.'))
-        velocity.y = float(msg_list[6].replace(',','.'))
-        velocity.z = float(msg_list[7].replace(',','.'))
 
-        imu_message = Imu()
-        now = rospy.get_rostime()
-        imu_message.header.stamp.secs = now.secs
-        imu_message.header.stamp.nsecs = now.nsecs
-        imu_message.header.frame_id = "0"
-        imu_message.linear_acceleration = acceleration
-        imu_message.angular_velocity = velocity
+        
+        for i in range(0,biggerpkg):
+            time = ""
+            if i < pkgSizeGyro:
+                velocity = Vector3()
+                velocity.x = float(gyro_msg[3*i].replace(',','.'))
+                velocity.y = float(gyro_msg[3*i+1].replace(',','.'))
+                velocity.z = float(gyro_msg[3*i+2].replace(',','.'))
+                time = gyro_msg[3*pkgSizeGyro+i]
 
-        return imu_message
+            if i < pkgSizeAcc:
+                acceleration = Vector3()
+                acceleration.x = float(acc_msg[3*i].replace(',','.'))
+                acceleration.y = float(acc_msg[3*i+1].replace(',','.'))
+                acceleration.z = float(acc_msg[3*i+2].replace(',','.'))
+                time = acc_msg[3*pkgSizeAcc+i]
+
+            imu_message = Imu()
+
+            now = rospy.get_rostime()
+            imu_message.header.stamp.secs = now.secs
+            imu_message.header.stamp.nsecs = now.nsecs
+
+            imu_message.header.frame_id = time
+            imu_message.angular_velocity = velocity
+            imu_message.linear_acceleration = acceleration
+            imu_list.append(imu_message)
+        return imu_list
 
 
 def main():
@@ -40,9 +63,6 @@ def main():
     imu_publisher = rospy.Publisher('/imu_data', Imu, queue_size=1)
     imu_sub = imu_bridge(imu_publisher, mqtt_topic, 'bridge_imu_'+ device)
     rospy.on_shutdown(imu_sub.hook)
-
-    
-
 
     while not rospy.is_shutdown():
         imu_sub.looping()

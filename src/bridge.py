@@ -16,7 +16,7 @@ class bridge:
 
         self.disconnect_flag = False
         self.rc = 1
-        self.timeout = 0;
+        self.timeout = 0
 
         self.client = mqtt.Client(self.client_id, clean_session=True)
         self.client.username_pw_set(self.user_id, self.password)
@@ -59,7 +59,13 @@ class bridge:
                 self.connect()
 
     def on_message(self, client, userdata, msg):
-        self.publisher.publish(self.msg_process(msg.payload))
+        ros_msgs = self.msg_process(msg.payload)
+        try:
+            for ros_msg in ros_msgs:
+                self.publisher.publish(ros_msg)
+                time.sleep(.01)
+        except TypeError:
+            self.publisher.publish(ros_msgs)
 
     def unsubscribe(self):
         print " unsubscribing"
