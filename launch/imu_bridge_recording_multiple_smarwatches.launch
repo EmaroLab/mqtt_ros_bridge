@@ -1,0 +1,12 @@
+<launch>
+  <node pkg="mqtt_ros_bridge" type="imu_bridge_recordings.py" name="imu_bridge_giver" output="screen">
+    <remap from="/imu_data" to="/imu_giver"/>
+    <param name="device_name" type="string" value="G Watch R 5509" />
+  </node>
+
+  <node pkg="mqtt_ros_bridge" type="imu_bridge_recordings.py" name="imu_bridge_receiver" output="screen">
+    <remap from="/imu_data" to="/imu_receiver"/>
+    <param name="device_name" type="string" value="G Watch R 5124" />
+  </node>
+</launch>
+
