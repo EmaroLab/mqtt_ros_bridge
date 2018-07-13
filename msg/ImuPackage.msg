@@ -1,0 +1,2 @@
+mqtt_ros_bridge/Vector3Time[] linear_acceleration
+mqtt_ros_bridge/Vector3Time[] angular_velocity
