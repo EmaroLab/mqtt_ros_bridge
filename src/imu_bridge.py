@@ -25,7 +25,6 @@ class imu_bridge(bridge.bridge):
         acceleration = Vector3()
         velocity = Vector3()
 
-        
         for i in range(0,biggerpkg):
             time = ""
             if i < pkgSizeGyro:
@@ -41,6 +40,7 @@ class imu_bridge(bridge.bridge):
                 acceleration.y = float(acc_msg[3*i+1].replace(',','.'))
                 acceleration.z = float(acc_msg[3*i+2].replace(',','.'))
                 time = acc_msg[3*pkgSizeAcc+i]
+
 
             imu_message = Imu()
 
