@@ -1,0 +1,6 @@
+<launch>
+  <node pkg="mqtt_ros_bridge" type="imu_bridge.py" name="imu_bridge" output="screen">
+    <remap from="/imu_data" to="/inertial"/>
+  </node>
+</launch>
+
