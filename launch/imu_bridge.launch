@@ -1,10 +1,9 @@
-<launch>
-  <arg name="inertial_pub_topic"  default="/inertial"/>
-  <arg name="smartwatch_ID"  default="G Watch R 5509"/>
-  
-  <node pkg="mqtt_ros_bridge" type="imu_bridge.py" name="imu_bridge_left_hand" output="screen">
-    <remap from="/imu_data" to="$(arg inertial_pub_topic)"/>
-    <param name="device_name" type="string" value="$(arg smartwatch_ID)" />
+<launch>  
+  <node pkg="mqtt_ros_bridge" type="imu_bridge.py" name="imu_bridge" output="screen">
+      <remap from="/G_Watch_R_5509" to="/imu_data"/>
+  </node>
+  <node pkg="mqtt_ros_bridge" type="imu_bridge_recordings.py" name="imu_bridge_recording" output="screen">
+      <remap from="/G_Watch_R_5509_package" to="/imu_data_package"/>
   </node>
 </launch>
 
