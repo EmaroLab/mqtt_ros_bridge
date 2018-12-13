@@ -1,11 +1,10 @@
 #!/usr/bin/python
 import paho.mqtt.client as mqtt
-import rospy
 import time
 
 class bridge:
 
-    def __init__(self, publisher, mqtt_topic, client_id = "bridge",user_id = "",password = "", host = "localhost", port = "1883", keepalive = 60):
+    def __init__(self, mqtt_topic, client_id = "bridge",user_id = "",password = "", host = "localhost", port = "1883", keepalive = 60):
         self.mqtt_topic = mqtt_topic
         self.client_id = client_id
         self.user_id = user_id
@@ -28,7 +27,6 @@ class bridge:
         self.client.on_subscribe = self.on_subscribe
 
         self.connect()
-        self.publisher = publisher
 
     def connect(self):
         while self.rc != 0:
@@ -59,13 +57,7 @@ class bridge:
                 self.connect()
 
     def on_message(self, client, userdata, msg):
-        ros_msgs = self.msg_process(msg.payload)
-        try:
-            for ros_msg in ros_msgs:
-                self.publisher.publish(ros_msg)
-                time.sleep(.01)
-        except TypeError:
-            self.publisher.publish(ros_msgs)
+        self.msg_process(msg)
 
     def unsubscribe(self):
         print " unsubscribing"
@@ -77,10 +69,17 @@ class bridge:
         self.client.disconnect()
 
     def on_unsubscribe(self, client, userdata, mid):
-        print "Unsubscribed to " + self.mqtt_topic
+        if (self.mqtt_topic == '#'):
+            print "Unsubscribed to all the topics" 
+        else:
+            print "Unsubscribed to " + self.mqtt_topic
 
     def on_subscribe(self, client, userdata, mid, granted_qos):
-        print "Subscribed to " + self.mqtt_topic
+        if (self.mqtt_topic == '#'):
+            print "Subscribed to all the topics" 
+        else:
+            print "Subscribed to " + self.mqtt_topic
+        
 
     def hook(self):
         self.unsubscribe()
