@@ -22,6 +22,7 @@ class imu_bridge_recordings(bridge.bridge):
             gyro_msg = msg_list[moduleSizeAcc+2:moduleSizeAcc+moduleSizeGyro]
 
             imu_data = ImuPackage()
+            imu_data.time.data = rospy.get_rostime().to_nsec()
 
             for i in range(0,pkgSizeAcc):
                 acceleration = Vector3Time()
