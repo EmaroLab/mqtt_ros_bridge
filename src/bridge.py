@@ -25,6 +25,7 @@ class bridge:
         self.client.on_message = self.on_message
         self.client.on_unsubscribe = self.on_unsubscribe
         self.client.on_subscribe = self.on_subscribe
+        self.client.on_publish = self.on_publish
 
         self.connect()
 
@@ -88,3 +89,10 @@ class bridge:
 
     def get_timeout(self):
         return self.timeout
+
+    def on_publish(self, client, userdata, mid):
+	    return True
+
+    def publish(self, msg):
+        print "Publishing in " + self.mqtt_topic
+        self.client.publish(self.mqtt_topic, msg)
